@@ -10,14 +10,17 @@ myApp.controller('AppCtrl', function($scope, $location, $interval, socket) {
   socket.on('request', function(data) {
     var sensor_row = {};
 
-		$scope.time = getDateTime();
-		$scope.voltage = data;
-		$scope.sensordata = [];
-    for (var i = 0; i <=11; i++) {
-
-			$scope.sensordata.push({"voltage" : data, "time" : $scope.time});
-		}
+    $scope.time = getDateTime();
+    $scope.voltage = data;
+    $scope.sensordata = [];
+    $scope.sum = [];
+    var lastTotal = 0;
+    data.forEach(function(element) {
+       $scope.sensordata.push({"voltage" : element.toFixed(3), "time" : $scope.time});
+       lastTotal = lastTotal + element;
+       $scope.sum.push(lastTotal.toFixed(3));
     });
+  });
 
 		function getDateTime() {
 

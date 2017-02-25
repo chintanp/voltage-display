@@ -50,7 +50,10 @@
                     Time
                   </th>
                   <th>
-                    Voltage
+                    Voltage (V)
+                  </th>
+                  <th>
+                    Cumulative Voltage (V)
                   </th>
 
                 </tr>
@@ -65,6 +68,9 @@
                   </td>
                   <td>
                     {{sensor_row.voltage}}
+                  </td>
+                  <td>
+                    {{sum[$index]}}
                   </td>
                 </tr>
               </tbody>

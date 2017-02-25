@@ -8,14 +8,13 @@ var express = require('express'),
     socket = require('./routes/socket.js'),
     RandomSignal = require("random-signal"),
     Fakerator = require("fakerator");
+var execFileSync = require('child_process').execFileSync;
 
 var fakerator = new Fakerator();
+var cwd = __dirname +"/bms/"
+var cmd = "./bms";
 
 fakerator.seed(12354);
-
-
-
-
 
 var app = module.exports = express();
 var server = require('http').createServer(app);
@@ -50,8 +49,17 @@ io.sockets.on('connection', function(socket) {
 
   setInterval(function () {
       var num = fakerator.random.number(-5, 5);
-      socket.emit('request', num);
-      console.log("Number" + num);
+      var output = execFileSync(cmd, {cwd : cwd}).toString();
+      var voltageString = output.substring(output.indexOf("Cell volts =") + 12, output.indexOf("Cell Temps ="));
+      var voltages = voltageString.split(/\b\s+\b/);
+      var voltage_int = [];
+      voltages.forEach(function(element) {
+        voltage_int.push(parseInt(element, 16)/10000);
+	
+      });
+      console.log(voltage_int.length);
+      socket.emit('request', voltage_int);
+      //console.log("Number" + num);
     }, 2000);
 
 });
